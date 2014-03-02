@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html
+	ng-app="App"
+	>
+	<head>
+		<title></title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+		<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
+		<script src="app.js"></script>
+
+		<link rev="made" href="mailto:cho45@lowreal.net"/>
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+
+
+		<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body ng-controller="MainCtrl">
+		<div class="container">
+			<div class="page-header">
+				<h1>Pin-header layout generator</h1>
+				<p class="lead">no more misses in wiring</p>
+			</div>
+
+			<div class="main" style="">
+				<style scoped>
+					/* specify numbers by scaling x10 */
+
+					table.pinheader {
+						-webkit-transform: scale(0.2);
+
+						color: #000;
+						font-family: 'Futura', sans-serif;
+						font-stretch: condensed;
+						font-weight: normal;
+						font-size: 0.5in;
+						line-height: 0.5in;
+						border-collapse: collapse;
+						border-spacing: 0;
+					}
+
+					table.pinheader th,
+					table.pinheader td {
+						border: 0.05in solid #000;
+					}
+
+					table.pinheader tr {
+						height: 1in;
+						overflow: hidden;
+					}
+
+					table.pinheader .pin {
+						width: 1in;
+						height: 1in;
+					}
+
+					table.pinheader .number {
+						width: 1in;
+						text-align: center;
+					}
+
+					table.pinheader .name {
+						width: 1in;
+						padding: 0 0.2in;
+					}
+
+					@media print {
+						table.pinheader .pin {
+							width: 1in;
+							height: 1in;
+						}
+					}
+				</style>
+
+				<label>
+					<input type="checkbox" ng-model="reverse_row" ng-change="update()"/>
+					Bottom View
+				</label>
+
+				<label>
+					<input type="checkbox" ng-model="reverse_direction" ng-change="update()"/>
+					Reverse direction
+				</label>
+
+				<table class="pinheader">
+					<tr>
+						<td colspan="6"></td>
+					</tr>
+					<tr ng-repeat="row in rows">
+						<td class="name" style="text-align: right">{{ row[0].name }}</td>
+						<th class="number">{{ row[0].number }}</th>
+						<td class="pin"></td>
+						<td class="pin"></td>
+						<th class="number">{{ row[1].number }}</th>
+						<td class="name" style="text-align: left">{{ row[1].name }}</td>
+					</tr>
+				</table>
+			</div>
+
+			<div id="footer">
+				<address>2014 <a href="mailto:cho45@lowreal.net">cho45@lowreal.net</a></address>
+			</div>
+		</div>
+	</body>
+</html>
