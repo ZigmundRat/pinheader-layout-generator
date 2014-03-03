@@ -147,7 +147,7 @@ function createPDF (rows, opts) {
 				pdf.setFillColor(0, 0, 0);
 				pdf.rect(
 					opts.x,
-					opts.y + (i+1)*unit - 0.3,
+					opts.y + (i+1)*unit,
 					nameWidth*unit,
 					1*unit,
 					'FD'
@@ -187,7 +187,7 @@ function createPDF (rows, opts) {
 				pdf.setFillColor(0, 0, 0);
 				pdf.rect(
 					opts.x + (nameWidth + pinNumberWidth + pinPlaceHolder*2 + pinNumberWidth)*unit,
-					opts.y + (i+1)*unit - 0.3,
+					opts.y + (i+1)*unit,
 					nameWidth*unit,
 					1*unit,
 					'FD'
