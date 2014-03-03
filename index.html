@@ -12,6 +12,8 @@
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
+		<script src="lib/jspdf.js"></script>
+		<script src="lib/micro-location.js"></script>
 		<script src="app.js"></script>
 
 		<link rev="made" href="mailto:cho45@lowreal.net"/>
@@ -21,94 +23,209 @@
 		<!--[if lt IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
+
+		<style>
+			#footer {
+				margin: 1em;
+				padding: 0.5em;
+				text-align: center;
+			}
+		</style>
+
+
+		<script type="text/javascript">
+
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-7079167-9']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+
+		</script>
 	</head>
 	<body ng-controller="MainCtrl">
-		<div class="container">
-			<div class="page-header">
-				<h1>Pin-header layout generator</h1>
+		<div class="jumbotron" style="position: relative; height: 250px; color: #fff; background: #000 url('http://lh5.googleusercontent.com/-mX0VN9-Xtf8/UxR7hsN6-II/AAAAAAAAQwM/Yl-uaZpMbI8/s2048/IMG_1219-2048.jpg') 50% 50% no-repeat">
+			<div class="container" style="text-shadow: 0 1px 2px #000;">
+				<h1>Pin-Header Layout Generator</h1>
 				<p class="lead">no more misses in wiring</p>
 			</div>
+		</div>
+		<div class="container">
 
-			<div class="main" style="">
-				<style scoped>
-					/* specify numbers by scaling x10 */
+			<p class="examples" style="margin: 10px 0 20px 0">
+				Examples:
+				<a href="?d=%23%20Example%20Raspberry%20Pi%20rev2%0A1%203V3%0A2%205V%0A3%20GPIO2%0A4%205V%0A5%20GOUI3%0A6%20GND%0A7%20GPIO4%0A8%20GPIO14%0A9%20GND%0A10%20GPIO15%0A11%20GPIO17%0A12%20GPIO18%0A13%20GPIO27%0A14%20GND%0A15%20GPIO22%0A16%20GPIO23%0A17%203V3%0A18%20GPIO24%0A19%20GPIO10%0A20%20GND%0A21%20GPIO9%0A22%20GPIO25%0A23%20GPIO11%0A24%20GPIO8%0A25%20GND%0A26%20GPIO7%0A">
+					Raspberry Pi
+				</a>,
+				<a href="?size=5&direction=Normal&view=Top&d=%23%20Example%20Raspberry%20Pi%20rev2%0A1%203V3%0A2%205V%0A3%20GPIO2%2FI2C_SDA%0A4%205V%0A5%20GOUI3%2FI2C_SCL%0A6%20GND%0A7%20GPIO4%2FARM_TDI%0A8%20GPIO14%2FUART_TXD%0A9%20GND%0A10%20GPIO15%2FUART_RXD%0A11%20GPIO17%0A12%20GPIO18%0A13%20GPIO27%2FARM_TMS%0A14%20GND%0A15%20GPIO22%2FARM_TRST%0A16%20GPIO23%2FARM_RTCK%0A17%203V3%0A18%20GPIO24%2FARM_TDO%0A19%20GPIO10%2FSPI0_MOSI%0A20%20GND%0A21%20GPIO9%2FSPI0_MISO%0A22%20GPIO25%2FARM_TCK%0A23%20GPIO11%2FSPI0_SCLK%0A24%20GPIO8%2FSPI0_CE0%0A25%20GND%0A26%20GPIO7%2FSPI0_CE1">
+					Raspberry Pi (More)
+				</a>,
+				<a href="?size=2&direction=Normal&view=Top&d=%23%20AVR%20ISP%206%20pin%0A1%20MISO%0A2%20VCC%0A3%20SCK%0A4%20MOSI%0A5%20RES%23%0A6%20GND">
+					AVR ISP
+				</a>,
+				<a href="?size=2&direction=Normal&view=Top&d=%23%20JTAG%20ARM%2020-PIN%0A1%20VCC%0A2%20VCC%0A3%20TRST%0A4%20GND%0A5%20TDI%0A6%20GND%0A7%20TMS%0A8%20GND%0A9%20TCLK%0A10%20GND%0A11%20RTCK%0A12%20GND%0A13%20TDO%0A14%20GND%0A15%20RESET%0A16%20GND%0A17%20N%2FC%0A18%20GND%0A19%20N%2FC%0A20%20GND">
+					JTAG ARM 20-PIN
+				</a>
+			</p>
 
-					table.pinheader {
-						-webkit-transform: scale(0.2);
+			<div class="main">
+				<div class="row" style="margin-bottom: 20px">
+					<div class="col-md-6">
 
-						color: #000;
-						font-family: 'Futura', sans-serif;
-						font-stretch: condensed;
-						font-weight: normal;
-						font-size: 0.5in;
-						line-height: 0.5in;
-						border-collapse: collapse;
-						border-spacing: 0;
-					}
+						<div class="btn-group">
+							<div class="btn-group">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									View: {{ view }} <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li><a ng-click="setView('Top')">Top</a></li>
+									<li><a ng-click="setView('Bottom')">Bottom</a></li>
+								</ul>
+							</div>
 
-					table.pinheader th,
-					table.pinheader td {
-						border: 0.05in solid #000;
-					}
+							<div class="btn-group">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									Direction: {{ direction }} <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li><a ng-click="setDirection('Normal')">Normal</a></li>
+									<li><a ng-click="setDirection('Reverse')">Reverse</a></li>
+								</ul>
+							</div>
 
-					table.pinheader tr {
-						height: 1in;
-						overflow: hidden;
-					}
+							<div class="btn-group">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									Size: {{ size | sizeName }} <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li><a ng-click="setSize(2)">Small</a></li>
+									<li><a ng-click="setSize(3)">Medium</a></li>
+									<li><a ng-click="setSize(5)">Large</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6" style="text-align: right">
+						<a ng-click="share()" class="btn btn-primary">Share Link</a>
+						<a href="{{ datauri }}" class="btn btn-primary" download="pinheader.pdf">Download PDF</a>
+					</div>
+				</div>
 
-					table.pinheader .pin {
-						width: 1in;
-						height: 1in;
-					}
+				<div class="row">
+					<div class="col-md-3">
+						<textarea ng-model="data" class="form-control" rows="40" ng-change="update()"></textarea>
 
-					table.pinheader .number {
-						width: 1in;
-						text-align: center;
-					}
-
-					table.pinheader .name {
-						width: 1in;
-						padding: 0 0.2in;
-					}
-
-					@media print {
-						table.pinheader .pin {
-							width: 1in;
-							height: 1in;
-						}
-					}
-				</style>
-
-				<label>
-					<input type="checkbox" ng-model="reverse_row" ng-change="update()"/>
-					Bottom View
-				</label>
-
-				<label>
-					<input type="checkbox" ng-model="reverse_direction" ng-change="update()"/>
-					Reverse direction
-				</label>
-
-				<!-- table class="pinheader">
-					<tr>
-						<td colspan="6"></td>
-					</tr>
-					<tr ng-repeat="row in rows">
-						<td class="name" style="text-align: right">{{ row[0].name }}</td>
-						<th class="number">{{ row[0].number }}</th>
-						<td class="pin"></td>
-						<td class="pin"></td>
-						<th class="number">{{ row[1].number }}</th>
-						<td class="name" style="text-align: left">{{ row[1].name }}</td>
-					</tr>
-				</table -->
-
-				<canvas pinheader="main"></canvas>
+					</div>
+					<div class="col-md-9">
+						<iframe ng-src="{{ datauri }}" width="800" height="800" style="border: 1px solid #ccc; outline: none; width: 100%;"></iframe>
+					</div>
+				</div>
 			</div>
 
 			<div id="footer">
 				<address>2014 <a href="mailto:cho45@lowreal.net">cho45@lowreal.net</a></address>
 			</div>
+
+			<dialog name="ShareDialog" style="text-align: center">
+				<div class="row">
+					<div class="col-md-4">
+						<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ shareurl }}" data-size="large" data-count="none" data-hashtags="pinheader">Tweet</a>
+						<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+					</div>
+					<div class="col-md-4">
+						<div class="g-plus" data-action="share" data-annotation="none" data-height="24" data-href="{{ shareurl }}"></div>
+
+						<script type="text/javascript">
+						  (function() {
+							var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+							po.src = 'https://apis.google.com/js/platform.js';
+							var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+						  })();
+						</script>
+					</div>
+					<div class="col-md-4">
+						<div class="fb-share-button" data-href="{{ shareurl }}" data-type="button"></div>
+
+						<div id="fb-root"></div>
+						<script>(function(d, s, id) {
+						  var js, fjs = d.getElementsByTagName(s)[0];
+						  if (d.getElementById(id)) return;
+						  js = d.createElement(s); js.id = id;
+						  js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1&appId=209373319098906";
+						  fjs.parentNode.insertBefore(js, fjs);
+						}(document, 'script', 'facebook-jssdk'));</script>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<input type="text" class="form-control" value="{{ shareurl }}" selectonfocus/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<p>Share this pin-header by link</p>
+					</div>
+				</div>
+			</dialog>
+
+<script type="text/x-pinheader" id="raspberrypi">
+# Example Raspberry Pi rev2
+1 3V3
+2 5V
+3 GPIO2
+4 5V
+5 GOUI3
+6 GND
+7 GPIO4
+8 GPIO14
+9 GND
+10 GPIO15
+11 GPIO17
+12 GPIO18
+13 GPIO27
+14 GND
+15 GPIO22
+16 GPIO23
+17 3V3
+18 GPIO24
+19 GPIO10
+20 GND
+21 GPIO9
+22 GPIO25
+23 GPIO11
+24 GPIO8
+25 GND
+26 GPIO7
+</script>
+
+
+			<script type="application/x-template" id="dialog">
+				<div class="modal" tabindex="-1" ng-show="show">
+					<style scoped>
+						.modal {
+							display: block !important;
+						}
+
+						.modal.ng-hide {
+							display: none !important;
+						}
+					</style>
+					<div class="modal-dialog" style="">
+						<form>
+							<div class="modal-content">
+								<div class="modal-header" style="border: none">
+									<button type="button" class="close" ng-click="close()">&times;</button>
+								</div>
+								<div class="modal-body" ng-transclude></div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</script>
 		</div>
 	</body>
 </html>
