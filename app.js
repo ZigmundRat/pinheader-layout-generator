@@ -527,7 +527,7 @@ App.controller('MainCtrl', function ($scope, $sce, $timeout, location, sample) {
 	$scope.size      = +location.params('size') || 3;
 	$scope.direction = location.params('direction') || "Normal";
 	$scope.view      = location.params('view') || "Top";
-	$scope.data      = location.params('d').replace(/\+/g, ' ') || sample('raspberrypi');
+	$scope.data      = (location.params('d') || '').replace(/\+/g, ' ') || sample('raspberrypi');
 	$scope.type      = location.params('type') || "Double";
 	$scope.datauri   = "about:blank";
 
