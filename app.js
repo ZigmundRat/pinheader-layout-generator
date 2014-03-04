@@ -420,6 +420,10 @@ App.filter("sizeName", function () {
 	};
 });
 
+App.filter("decodeURIComponent", function () {
+	return decodeURIComponent;
+});
+
 App.controller('MainCtrl', function ($scope, $sce, $timeout, location, sample) {
 	$scope.update = function () {
 		console.log('update');
@@ -516,6 +520,7 @@ App.controller('MainCtrl', function ($scope, $sce, $timeout, location, sample) {
 			view      : $scope.view,
 			d         : $scope.data
 		}).href;
+		console.log($scope.shareurl);
 		$scope.ShareDialog.open();
 	};
 
