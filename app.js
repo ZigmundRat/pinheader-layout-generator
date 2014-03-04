@@ -37,6 +37,16 @@ App.directive('selectonfocus', function () {
 	};
 });
 
+App.directive('sharebutton', function () {
+	return function (scope, elem, attrs) {
+		elem.
+			on("click", function () {
+				window.open(attrs.href,  '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
+				return false;
+			});
+	};
+});
+
 
 App.factory('location', function () {
 	return Location.parse(location.href);
@@ -422,6 +432,10 @@ App.filter("sizeName", function () {
 
 App.filter("decodeURIComponent", function () {
 	return decodeURIComponent;
+});
+
+App.filter("encodeURIComponent", function () {
+	return encodeURIComponent;
 });
 
 App.controller('MainCtrl', function ($scope, $sce, $timeout, location, sample) {
