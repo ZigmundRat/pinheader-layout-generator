@@ -13,6 +13,7 @@
 		<link rel="stylesheet" href="assets/LigatureSymbols/lsf.css">
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
+		<script src="lib/underscore-min.js"></script>
 		<script src="lib/jspdf.js"></script>
 		<script src="lib/micro-location.js"></script>
 		<script src="app.js"></script>
@@ -69,6 +70,9 @@
 				<a class="label label-info" href="?size=5&direction=Normal&view=Top&d=%23%20Example%20Raspberry%20Pi%20rev2%0A1%203V3%0A2%205V%0A3%20GPIO2%2FI2C_SDA%0A4%205V%0A5%20GOUI3%2FI2C_SCL%0A6%20GND%0A7%20GPIO4%2FARM_TDI%0A8%20GPIO14%2FUART_TXD%0A9%20GND%0A10%20GPIO15%2FUART_RXD%0A11%20GPIO17%0A12%20GPIO18%0A13%20GPIO27%2FARM_TMS%0A14%20GND%0A15%20GPIO22%2FARM_TRST%0A16%20GPIO23%2FARM_RTCK%0A17%203V3%0A18%20GPIO24%2FARM_TDO%0A19%20GPIO10%2FSPI0_MOSI%0A20%20GND%0A21%20GPIO9%2FSPI0_MISO%0A22%20GPIO25%2FARM_TCK%0A23%20GPIO11%2FSPI0_SCLK%0A24%20GPIO8%2FSPI0_CE0%0A25%20GND%0A26%20GPIO7%2FSPI0_CE1">
 					Raspberry Pi (More)
 				</a>
+				<a class="label label-info" href="?type=Double&size=5&direction=Normal&view=Top&d=%23%20Example%20Raspberry%20Pi%20rev2%0A1%203V3%0A2%205V%0A3%20GPIO2%2FI2C_SDA%0A4%205V%0A5%20GOUI3%2FI2C_SCL%0A6%20GND%0A7%20GPIO4%2FARM_TDI%0A8%20GPIO14%2FUART_TXD%0A9%20GND%0A10%20GPIO15%2FUART_RXD%0A11%20GPIO17%0A12%20GPIO18%0A13%20GPIO27%2FARM_TMS%0A14%20GND%0A15%20GPIO22%2FARM_TRST%0A16%20GPIO23%2FARM_RTCK%0A17%203V3%0A18%20GPIO24%2FARM_TDO%0A19%20GPIO10%2FSPI0_MOSI%0A20%20GND%0A21%20GPIO9%2FSPI0_MISO%0A22%20GPIO25%2FARM_TCK%0A23%20GPIO11%2FSPI0_SCLK%0A24%20GPIO8%2FSPI0_CE0%0A25%20GND%0A26%20GPIO7%2FSPI0_CE1%0A27%20EEPROM%20ID_SD%0A28%20ID_SC%20EEPROM%0A29%20GPIO5%0A30%20GND%0A31%20GPIO6%0A32%20GPIO12%0A33%20GPIO13%0A34%20GND%0A35%20GPIO19%0A36%20GPIO16%0A37%20GPIO26%0A38%20GPIO20%0A39%20GND%0A40%20GPIO21">
+					Raspberry Pi A+/B+
+				</a>
 				<a class="label label-info" href="?size=2&direction=Normal&view=Top&d=%23%20AVR%20ISP%206%20pin%0A1%20MISO%0A2%20VCC%0A3%20SCK%0A4%20MOSI%0A5%20RES%23%0A6%20GND">
 					AVR ISP
 				</a>
@@ -79,7 +83,7 @@
 					DIP Dual OP AMP
 				</a>
 				<a class="label label-info" href="?type=DIP&size=3&direction=Normal&view=Top&d=%23%20ATmega168%2F328%0A1%20PC6%2FRESET%23%0A2%20PD0%2FRXD%0A3%20PD1%2FTXD%0A4%20PD2%0A5%20PD3%0A6%20PD4%0A7%20VCC%0A8%20GND%0A9%20PB6%0A10%20PB7%0A11%20PD5%0A12%20PD6%0A13%20PD7%0A14%20PB0%0A%0A15%20PB1%0A16%20SS%23%2FPB2%0A17%20MOSI%2FPB3%0A18%20MISO%2FPB4%0A19%20SCL%2FPB5%0A20%20AVCC%0A21%20AREF%0A22%20GND%0A23%20PC0%0A24%20PC1%0A25%20PC2%0A26%20PC3%0A27%20SDA%2FPC4%0A28%20SCL%2FPC5">
-					AVR ATmega168/328
+					DIP AVR ATmega168/328
 				</a>
 				<style scoped>
 					.examples .label {
@@ -158,7 +162,7 @@
 				<address>2014 <a href="mailto:cho45@lowreal.net">cho45@lowreal.net</a></address>
 			</div>
 
-			<dialog name="ShareDialog" style="text-align: center">
+			<app-dialog name="ShareDialog" style="text-align: center">
 				<div class="row">
 					<div class="col-md-4">
 						<a href="https://twitter.com/intent/tweet?url={{ shareurl | encodeURIComponent }}" sharebutton target="_blank" class="share lsf" title="twitter" style="background: #2ca8d2">twitter</a>
@@ -197,7 +201,7 @@
 						<p>Share this pin-header by link</p>
 					</div>
 				</div>
-			</dialog>
+			</app-dialog>
 
 <script type="text/x-pinheader" id="raspberrypi">
 # Example Raspberry Pi rev2

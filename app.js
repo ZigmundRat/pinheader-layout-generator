@@ -1,6 +1,6 @@
 
 var App = angular.module('App', []);
-App.directive('dialog', function ($q) {
+App.directive('appDialog', function ($q) {
 	return {
 		restrict: 'E',
 		transclude : true,
@@ -94,7 +94,7 @@ jsPDF.API.textWithAlign = function (align, x, y, w, h, text) {
 	} else
 	if (align == "right") {
 		offsetX = (w - d.width);
-		console.log(['right', offsetX]);
+		// console.log(['right', offsetX]);
 	} else {
 		// nothing
 	}
@@ -128,14 +128,26 @@ function createPDF (rows, opts) {
 	});
 
 	pdf.setFontSize(14);
-	pdf.text(150, 30, "Real size");
+	pdf.text(120, 30, "Real size (cut the following)");
 
-	size = drawHeader({
-		x: 150,
-		y: 35,
-		nameWidth: opts.size,
-		scale : 1
-	});
+	size = { width: 0, height: 0};
+
+	var margin = 1;
+	var ymax = 297 - 20;
+	var xmax = 210 - 10;
+
+	for (var y = 35; y < ymax - size.height;) {
+		for (var x = 120; x < xmax - size.width;) {
+			size = drawHeader({
+				x: x,
+				y: y,
+				nameWidth: opts.size,
+				scale : 1
+			});
+			x += size.width  + margin;
+		}
+		y += size.height + margin;
+	}
 
 	pdf.setFontSize(10);
 	pdf.text(
@@ -415,7 +427,7 @@ App.config(function ($sceProvider, $compileProvider) {
 
 App.service("sample", function () {
 	return function (id) {
-		var text = document.getElementById(id).innerText;
+		var text = $(document.getElementById(id)).text();
 		return text.replace(/^\n/, '');
 	};
 });
@@ -439,9 +451,10 @@ App.filter("encodeURIComponent", function () {
 });
 
 App.controller('MainCtrl', function ($scope, $sce, $timeout, location, sample) {
-	$scope.update = function () {
+	$scope.update = _.throttle(function () { $scope.$evalAsync(function () {
 		console.log('update');
 		if (!$scope.data) return;
+		console.log('updating...');
 
 		var pins = {};
 		var title = '';
@@ -500,7 +513,8 @@ App.controller('MainCtrl', function ($scope, $sce, $timeout, location, sample) {
 			size : $scope.size
 		});
 		$scope.datauri = $scope.pdf.output('datauristring');
-	};
+		console.log('updated');
+	}); }, 1000);
 
 	$scope.setType = function (v) {
 		$scope.type = v;
