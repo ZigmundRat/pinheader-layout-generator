@@ -513,6 +513,17 @@ App.controller('MainCtrl', function ($scope, $sce, $timeout, location, sample) {
 			size : $scope.size
 		});
 		$scope.datauri = $scope.pdf.output('datauristring');
+
+		if (history.replaceState) {
+			history.replaceState({}, "", location.params({
+				type      : $scope.type,
+				size      : $scope.size,
+				direction : $scope.direction,
+				view      : $scope.view,
+				d         : $scope.data
+			}).href);
+		}
+
 		console.log('updated');
 	}); }, 1000);
 
